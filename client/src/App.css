@@ -1,0 +1,151 @@
+.container {
+  max-width: 650px;
+  width: 100%;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+h1 {
+  text-align: center;
+  color: #646cff;
+  margin-bottom: 2.5rem;
+  font-size: 2.5rem;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(100, 108, 255, 0.3);
+}
+
+.error {
+  background-color: #ff4444;
+  color: white;
+  padding: 1rem 1.25rem;
+  border-radius: 10px;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  font-weight: 500;
+  box-shadow: 0 2px 8px rgba(255, 68, 68, 0.3);
+}
+
+.add-todo {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.todo-input {
+  flex: 1;
+  padding: 0.875rem 1rem;
+  border: 2px solid #646cff;
+  border-radius: 10px;
+  font-size: 1rem;
+  background-color: #1a1a1a;
+  color: white;
+  transition: all 0.2s;
+}
+
+.todo-input:focus {
+  outline: none;
+  border-color: #535bf2;
+  box-shadow: 0 0 0 3px rgba(100, 108, 255, 0.1);
+}
+
+.add-button {
+  padding: 0.875rem 2rem;
+  background-color: #646cff;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  box-shadow: 0 2px 8px rgba(100, 108, 255, 0.3);
+}
+
+.add-button:hover {
+  background-color: #535bf2;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(100, 108, 255, 0.4);
+}
+
+.add-button:active {
+  transform: translateY(0);
+}
+
+.todo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.empty-message {
+  text-align: center;
+  color: #999;
+  padding: 3rem 2rem;
+  font-size: 1.1rem;
+  font-style: italic;
+  background-color: #2a2a2a;
+  border-radius: 12px;
+  border: 2px dashed #3a3a3a;
+}
+
+.todo-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1.25rem;
+  background-color: #2a2a2a;
+  border-radius: 12px;
+  border: 2px solid #3a3a3a;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.todo-item:hover {
+  border-color: #646cff;
+  background-color: #2f2f2f;
+  transform: translateX(4px);
+}
+
+.todo-checkbox {
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  accent-color: #646cff;
+}
+
+.todo-item span {
+  flex: 1;
+  text-align: left;
+  font-size: 1.05rem;
+  color: #e0e0e0;
+  font-weight: 400;
+}
+
+.todo-item span.completed {
+  text-decoration: line-through;
+  color: #888;
+  opacity: 0.7;
+}
+
+.delete-button {
+  padding: 0.6rem 1.25rem;
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+  box-shadow: 0 2px 4px rgba(255, 68, 68, 0.3);
+}
+
+.delete-button:hover {
+  background-color: #ff2222;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 8px rgba(255, 68, 68, 0.4);
+}
+
+.delete-button:active {
+  transform: translateY(0);
+}
