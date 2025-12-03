@@ -11,11 +11,11 @@ app.use(express.json());
 
 // PostgreSQL connection
 const pool = new Pool({
-  host: process.env.DB_HOST || 'localhost',
-  port: process.env.DB_PORT || 5432,
-  database: process.env.DB_NAME || 'demodb',
-  user: process.env.DB_USER || 'demouser',
-  password: process.env.DB_PASSWORD || 'demopassword',
+  host: process.env.DB_HOST,
+  port: process.env.DB_PORT,
+  database: process.env.DB_NAME,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
 });
 
 // Initialize database table
@@ -35,13 +35,14 @@ const initDB = async () => {
   }
 };
 
-// Routes
+// Server health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', message: 'Server is running' });
 });
 
 // Get all todos
 app.get('/api/todos', async (req, res) => {
+  console.log('[GET] /api/todos')
   try {
     const result = await pool.query('SELECT * FROM todos ORDER BY created_at DESC');
     res.json(result.rows);
@@ -53,6 +54,7 @@ app.get('/api/todos', async (req, res) => {
 
 // Create a todo
 app.post('/api/todos', async (req, res) => {
+  console.log('[POST] /api/todos')
   const { title } = req.body;
   try {
     const result = await pool.query(
@@ -69,6 +71,7 @@ app.post('/api/todos', async (req, res) => {
 // Toggle todo completion
 app.put('/api/todos/:id', async (req, res) => {
   const { id } = req.params;
+  console.log(`[PUT] /api/todos/${id}`)
   try {
     const result = await pool.query(
       'UPDATE todos SET completed = NOT completed WHERE id = $1 RETURNING *',
@@ -84,6 +87,7 @@ app.put('/api/todos/:id', async (req, res) => {
 // Delete a todo
 app.delete('/api/todos/:id', async (req, res) => {
   const { id } = req.params;
+  console.log(`[DELETE] /api/todos/${id}`)
   try {
     await pool.query('DELETE FROM todos WHERE id = $1', [id]);
     res.status(204).send();

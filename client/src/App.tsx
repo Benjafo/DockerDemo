@@ -86,7 +86,7 @@ function App() {
 
   return (
     <div className="container">
-      <h1>Docker Demo - Todo App</h1>
+      <h1>Docker Demo Todo App</h1>
 
       {error && <div className="error">{error}</div>}
 
