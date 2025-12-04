@@ -1,0 +1,76 @@
+services:
+
+  server:
+    # The build command tells docker where to look for a Dockerfile. Since we have a server/ directory with a Dockerfile in it, for the server service we'd want to point Docker Compose to that directory:
+    build: ./server
+    # This is actually publishing the port to our local network. Docker has a different network than your local machine, so we need to "publish" the port from Docker's network to ours, in order to make it accessable, so that we can visit localhost:3000 for instance.
+    ports:
+      - "3000:3000"
+    # These are environment variables that we are passing to the server. These are all mostly specific to our Postgres instance, but we can also define and reference any custom environment variables we want here. For instance if I had a variable "FOO: bar", in my server application I could reference the value of FOO with process.env.FOO
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: demodb
+      DB_USER: demouser
+      DB_PASSWORD: demopassword
+      # This variable tells Express.js what port to listen on
+      PORT: 3000
+    # [INSTRUCTIONS] don't use this yet, wait until we do the database container and define the healthcheck, then add this section
+    depends_on:
+      db:
+        condition: service_healthy
+    # Volumes are how data persists, even after you stop or remove a docker container. There are two types of volumes, named and anonymous. Named volumes persist indefinitely until manually removed, whereas anonymous volumes have a random ID and are removed when containers are removed - they are more meant for caching building artifacts. Volumes are useful for two main purposes:
+    # 1. Persisting information that is important such as a database, which would be a named volume
+    # 2. Optimizing the build process for dependencies that rarely change such as the node_modules folder, which gets quite large and takes up a lot of resouces. This would be an anonymous volume
+    # Let's declare an anonymous volume for node_modules for caching and saving us time during build down the road:
+    volumes:
+      - /app/node_modules
+      # [INSTRUCTIONS] Wait to do this until we talk about bind mounts/hot reloading
+      # This "binds" the server directory on our host machine to the /app directory in the container, which is the working directory that we set in the server's Dockerfile
+      - ./server:/app
+
+  db:
+    # For the database service, we are going to use a prebuilt postgres image, rather than compiling our own from a Dockerfile. We use the image command for this:
+    image: postgres:16-alpine
+    # We need to set environment variables for postgres - a user, password, and database:
+    environment:
+      POSTGRES_USER: demouser
+      POSTGRES_PASSWORD: demopassword
+      POSTGRES_DB: demodb
+    # We need to expose the service's port to make it accessible through the application. Postgres uses 5432 by default:
+    ports:
+      - "5432:5432"
+    # Let's create a named volume for the postgres data. We want this to persist, even if we stop the containers. We'd lose all of our todos otherwise. This maps our persisting named postgres_data volume to the path /var/lib/postgresql/data in the container
+    # [INSTRUCTIONS] go down to the volumes section and create the postgres_data named volume
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    # The healthcheck command is used for determining whether a container is "healthy". This is using a postgres tool called pg_isready to determine whether the container is healthy or not.
+    # [INSTRUCTIONS] go up to the server service and add the depends_on command referencing this container
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U demouser -d demodb"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  client:
+    # Just like with the server, we specify a path to the Dockerfile and publish a port for the service:
+    build: ./client
+    ports:
+      - "5173:5173"
+    # We need to set an environment variable. This is used in the frontend app, for all API calls made, we reference VITE_API_URL. This should be the URL of the API that is running, in our case it is localhost:3000
+    environment:
+      VITE_API_URL: http://localhost:3000
+    # We'll add another depends_on command here, since the client requires the server to be running to make API calls. This time, we're not going to specify a condition of service_healthy, we'll just list the server here. This ensures the server container is created before the client starts, but does not wait for the server to be ready or healthy - it only controls startup order.
+    depends_on:
+      - server
+    # Like we did for the server, we'll add an anonymous volume for the node_modules folder so that we're not wasting time and resources during the build process:
+    volumes:
+      - /app/node_modules
+      # [INSTRUCTIONS] Wait to do this until we talk about bind mounts/hot reloading
+      # Similarly to the server, we're binding our local client directory to the client container's /app directory, so when we make changes it will reflect immediately
+      - ./client:/app
+
+# [INSTRUCTIONS] Create this once we add the named volume to the db service
+# Named volumes must be declared here at the top level - outside of services - so Docker Compose knows how to manage these
+volumes:
+  postgres_data:
