@@ -3,7 +3,7 @@ const cors = require('cors');
 const { Pool } = require('pg');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT;
 
 // Middleware
 app.use(cors());
@@ -40,8 +40,6 @@ app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
     message: 'Server is running',
-    // [INSTRUCTIONS] add this line to test hot reloading
-    // timestamp: new Date(),
   });
 });
 
