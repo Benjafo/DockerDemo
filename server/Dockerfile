@@ -18,4 +18,7 @@ EXPOSE 3000
 
 # Start the node application
 # Note that CMD is different from RUN. RUN commands are executed during the build process of the image, each RUN command creates what's called a "layer" in the docker image. However there can only be one CMD command in a Dockerfile, and this is the command that is executed when a container is started from the built docker image
+# [INSTRUCTIONS] switch this to npm run dev when we discuss hot reloading/bind mounts
+# When we run npm run dev with nodemon AND a bind mount to our server directory, any changes we make here will immediately sync with the container due to the bind mount, and nodemon will detect changes and restart the server
 CMD ["npm", "start"]
+# CMD ["npm", "run", "dev"]

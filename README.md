@@ -155,3 +155,67 @@ docker compose up --build
 ```
 
 The data that was previously entered is no longer available.
+
+## 9. Bind mounts and hot reload
+
+First, explain what hot reloading is. Then, CTRL+C twice to stop the existing running containers. Let's add hot reloading to the server:
+- Add bind mount to server service
+- Explain what nodemon is and briefly go over `nodemon.json`
+- Switch server Dockerfile to use `npm run dev` instead of `npm start`
+- Go to server/index.js and add the timestamp line to the health check endpoint
+
+Next, let's add hot reloading to the client.
+- Add bind mount to client service
+- Edit vite config to include usePolling
+- Make a demo change on the client app, e.g. change the title on the page
+
+## 10. Docker exec
+
+Sometimes, we need to manually inspect or edit the database in our applications. The ideal solution would be to add the "pgAdmin" container and make changes through the web UI, but for a more simple solution we can just edit the database through a command line.
+
+First, in a new terminal window, let's run `docker ps` to show that the database container is running:
+
+```bash
+docker ps
+```
+
+We can see that the database is up. Let's connect to it by using a command called `docker exec` - this lets us execute any command inside of a docker container. In this case, we will execute the `psql` command to allow us to edit the postgres database inside of the container. We'll authenticate with the database using the credentials we passed to the container in `docker-compose.yml` through environment variables:
+
+```bash
+docker compose exec db psql -U demouser -d demodb
+```
+
+"docker compose exec" - first command, executes "exec"
+"db" - the container to execute the command in
+"psql" - the command to execute
+"-U demouser -d demodb" - arguments passed to the command, specifies a user and database for postgres
+
+Now, let's show all tables with a postgres command:
+
+```bash
+/dt
+```
+
+Let's view our todos table:
+
+```bash
+SELECT * FROM todos;
+```
+
+Let's update a todo in the running container:
+
+```bash
+UPDATE todos SET title = 'Modified through psql' WHERE id = {id};
+```
+
+The change should have reflected in the database, let's confirm:
+
+```bash
+SELECT * FROM todos WHERE id = {id};
+```
+
+Refresh the browser and view the updated todo.
+
+Explain:
+- We can use this to create, read, update, and delete any record we have in our running database container through SQL queries
+- We can add a pgAdmin service to make this more user friendly through a web interface

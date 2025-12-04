@@ -25,6 +25,9 @@ services:
     # Let's declare an anonymous volume for node_modules for caching and saving us time during build down the road:
     volumes:
       - /app/node_modules
+      # [INSTRUCTIONS] Wait to do this until we talk about bind mounts/hot reloading
+      # This "binds" the server directory on our host machine to the /app directory in the container, which is the working directory that we set in the server's Dockerfile
+      - ./server:/app
 
   db:
     # For the database service, we are going to use a prebuilt postgres image, rather than compiling our own from a Dockerfile. We use the image command for this:
@@ -63,6 +66,9 @@ services:
     # Like we did for the server, we'll add an anonymous volume for the node_modules folder so that we're not wasting time and resources during the build process:
     volumes:
       - /app/node_modules
+      # [INSTRUCTIONS] Wait to do this until we talk about bind mounts/hot reloading
+      # Similarly to the server, we're binding our local client directory to the client container's /app directory, so when we make changes it will reflect immediately
+      - ./client:/app
 
 # [INSTRUCTIONS] Create this once we add the named volume to the db service
 # Named volumes must be declared here at the top level - outside of services - so Docker Compose knows how to manage these

@@ -4,9 +4,12 @@ import { defineConfig } from 'vite'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react()],
-  server: {
-    watch: {
-        usePolling: true,
-    }
-  }
+
+// [INSTRUCTIONS] Wait to add this until the client hot reloading part of the demo
+//   server: {
+//     watch: {
+//         usePolling: true,
+//     }
+//   }
+
 })

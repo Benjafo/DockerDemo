@@ -37,7 +37,12 @@ const initDB = async () => {
 
 // Server health check
 app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', message: 'Server is running' });
+  res.json({
+    status: 'ok',
+    message: 'Server is running',
+    // [INSTRUCTIONS] add this line to test hot reloading
+    // timestamp: new Date(),
+  });
 });
 
 // Get all todos
