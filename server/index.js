@@ -37,6 +37,7 @@ const initDB = async () => {
 
 // Server health check
 app.get('/api/health', (req, res) => {
+  console.log('[GET] /api/health')
   res.json({
     status: 'ok',
     message: 'Server is running',
